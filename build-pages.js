@@ -64,6 +64,7 @@ async function main() {
   await render('post.ejs', 'post.html', {
     pageTitle: 'Create Post',
     categories,
+    posts,
     isStaticDeploy: true
   });
 

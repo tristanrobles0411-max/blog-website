@@ -59,7 +59,8 @@
       <p><span>Bayan News</span> • Community stories and ideas.</p>
     </footer>
     <% if (isStaticDeploy) { %>
-      <script src="./static-mode.js"></script>
+      <script id="seed-posts" type="application/json"><%- JSON.stringify(posts).replace(/</g, '\\u003c') %></script>
+      <script src="./static-app.js"></script>
     <% } %>
   </body>
 </html>

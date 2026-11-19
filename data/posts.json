@@ -1,14 +1,3 @@
 {
-  "posts": [
-    {
-      "id": 1794944811283,
-      "title": "Trump Visited Philippines ",
-      "author": "tannn",
-      "content": "Hello World",
-      "category": "Politics",
-      "createdAt": "2026-11-17T19:46:51.283Z",
-      "likes": 0,
-      "comments": []
-    }
-  ]
+  "posts": []
 }

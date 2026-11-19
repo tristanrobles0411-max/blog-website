@@ -127,6 +127,7 @@
     </footer>
 
     <script src="./bootstrap.bundle.min.js"></script>
+    <% if (!isStaticDeploy) { %>
     <script>
       const searchInput = document.getElementById('searchInput');
       const searchForm = document.getElementById('searchForm');
@@ -194,8 +195,10 @@
         });
       });
     </script>
+    <% } %>
     <% if (isStaticDeploy) { %>
-      <script src="./static-mode.js"></script>
+      <script id="seed-posts" type="application/json"><%- JSON.stringify(posts).replace(/</g, '\\u003c') %></script>
+      <script src="./static-app.js"></script>
     <% } %>
   </body>
 </html>
