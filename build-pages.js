@@ -57,18 +57,21 @@ async function main() {
     pageTitle: 'Home',
     newsPreview,
     categories,
-    selectedCategory: 'All'
+    selectedCategory: 'All',
+    isStaticDeploy: true
   });
 
   await render('post.ejs', 'post.html', {
     pageTitle: 'Create Post',
-    categories
+    categories,
+    isStaticDeploy: true
   });
 
   await render('newsfeed.ejs', 'newsfeed.html', {
     pageTitle: 'News Feed',
     articles: newsPreview,
-    query: ''
+    query: '',
+    isStaticDeploy: true
   });
 
   fs.cpSync(path.join(root, 'public'), path.join(output), { recursive: true });

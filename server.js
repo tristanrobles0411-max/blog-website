@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', __dirname);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -164,18 +164,19 @@ app.get('/', async (req, res) => {
   const newsPreview = (await fetchAbsCbnNews()).slice(0, 3);
   const currentUser = 'Guest';
 
-  res.render('home', {
+  res.render('index', {
     posts: sortedPosts,
     currentUser,
     pageTitle: 'Home',
     newsPreview,
     categories: POST_CATEGORIES,
-    selectedCategory
+    selectedCategory,
+    isStaticDeploy: false
   });
 });
 
 app.get('/post', (req, res) => {
-  res.render('post', { pageTitle: 'Create Post', categories: POST_CATEGORIES });
+  res.render('post', { pageTitle: 'Create Post', categories: POST_CATEGORIES, isStaticDeploy: false });
 });
 
 app.post('/post', (req, res) => {
@@ -334,7 +335,8 @@ app.get('/newsfeed', async (req, res) => {
   res.render('newsfeed', {
     pageTitle: 'News Feed',
     articles,
-    query
+    query,
+    isStaticDeploy: false
   });
 });
 

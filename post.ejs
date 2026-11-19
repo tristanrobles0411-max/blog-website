@@ -58,5 +58,8 @@
     <footer class="footer">
       <p><span>Bayan News</span> • Community stories and ideas.</p>
     </footer>
+    <% if (isStaticDeploy) { %>
+      <script src="./static-mode.js"></script>
+    <% } %>
   </body>
 </html>

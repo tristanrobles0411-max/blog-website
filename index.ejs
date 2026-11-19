@@ -194,5 +194,8 @@
         });
       });
     </script>
+    <% if (isStaticDeploy) { %>
+      <script src="./static-mode.js"></script>
+    <% } %>
   </body>
 </html>
