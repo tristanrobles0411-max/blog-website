@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const ejs = require('ejs');
 
-const root = path.resolve(__dirname, '..');
+const root = __dirname;
 const output = path.join(root, '_site');
 
 const categories = [
