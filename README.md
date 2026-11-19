@@ -1,8 +1,5 @@
 # Bayan News
 
-## Local development
-
-```powershell
-npm install
-npm start
-```
+# Info about the website
+Info about blogs
+Uses News Api and Has Post/Comment functionalities.
