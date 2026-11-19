@@ -12,9 +12,9 @@
       <div class="topbar">
         <div class="brand">Bayan News</div>
         <nav>
-          <a href="/">Home</a>
-          <a href="/post">Post</a>
-          <a href="/newsfeed">News Feed</a>
+          <a href="./">Home</a>
+          <a href="./post">Post</a>
+          <a href="./newsfeed">News Feed</a>
         </nav>
 
         <form class="search-form" id="searchForm">
@@ -34,7 +34,7 @@
         <div class="news-preview-grid">
           <% if (newsPreview && newsPreview.length > 0) { %>
             <% newsPreview.forEach(article => { %>
-              <a class="news-preview-card" href="/newsfeed" target="_self">
+              <a class="news-preview-card" href="./newsfeed" target="_self">
                 <div class="news-tag">ABS-CBN</div>
                 <h3><%= article.title %></h3>
                 <p><%= article.summary %></p>
@@ -46,13 +46,13 @@
 
       <div class="page-header">
         <h2>Latest Posts</h2>
-        <a href="/post"><button class="primary-btn">Create Post</button></a>
+        <a href="./post"><button class="primary-btn">Create Post</button></a>
       </div>
 
       <div class="category-filters" aria-label="Post category filters">
-        <a href="/" class="category-filter <%= selectedCategory === 'All' ? 'active' : '' %>">All</a>
+        <a href="./" class="category-filter <%= selectedCategory === 'All' ? 'active' : '' %>">All</a>
         <% categories.forEach(category => { %>
-          <a href="/?category=<%= encodeURIComponent(category) %>" class="category-filter <%= selectedCategory === category ? 'active' : '' %>"><%= category %></a>
+          <a href="./?category=<%= encodeURIComponent(category) %>" class="category-filter <%= selectedCategory === category ? 'active' : '' %>"><%= category %></a>
         <% }) %>
       </div>
 
