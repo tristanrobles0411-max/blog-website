@@ -25,7 +25,11 @@
       </div>
 
       <div class="form-box">
+        <% if (isStaticDeploy) { %>
+        <form class="form-grid" id="postForm">
+        <% } else { %>
         <form action="/post" method="POST" class="form-grid">
+        <% } %>
           <div>
             <label for="title">Title</label>
             <input id="title" name="title" type="text" placeholder="Post title" required />
@@ -60,7 +64,7 @@
     </footer>
     <% if (isStaticDeploy) { %>
       <script id="seed-posts" type="application/json"><%- JSON.stringify(posts).replace(/</g, '\\u003c') %></script>
-      <script src="./static-app.js"></script>
+      <script src="./static-app.js?v=3"></script>
     <% } %>
   </body>
 </html>

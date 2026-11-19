@@ -198,7 +198,7 @@
     <% } %>
     <% if (isStaticDeploy) { %>
       <script id="seed-posts" type="application/json"><%- JSON.stringify(posts).replace(/</g, '\\u003c') %></script>
-      <script src="./static-app.js"></script>
+      <script src="./static-app.js?v=3"></script>
     <% } %>
   </body>
 </html>
