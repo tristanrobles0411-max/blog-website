@@ -25,38 +25,47 @@
         <a href="./"><button class="secondary-btn" type="button">Back to Home</button></a>
       </div>
 
-      <form class="news-search-form" action="./newsfeed" method="GET">
+      <form class="news-search-form" id="newsSearchForm" action="./newsfeed" method="GET" role="search">
         <input
+          id="newsSearchInput"
           type="search"
           name="q"
           value="<%= query %>"
           placeholder="Search ABS-CBN news..."
           aria-label="Search ABS-CBN news"
+          autocomplete="off"
         />
         <button class="secondary-btn" type="submit">Search News</button>
-        <% if (query) { %>
-          <a href="./newsfeed" class="delete-btn" style="text-decoration: none;">Clear</a>
-        <% } %>
+        <a href="./newsfeed" id="clearNewsSearch" class="delete-btn" style="text-decoration: none;<%= query ? '' : ' display: none;' %>">Clear</a>
       </form>
 
-      <% if (articles.length === 0) { %>
-        <div class="empty-state">No ABS-CBN news found for &ldquo;<%= query %>&rdquo;.</div>
-      <% } else { %>
-        <div class="news-grid">
-          <% articles.forEach(article => { %>
-            <article class="news-card">
-              <div class="news-tag"><%= article.source %></div>
-              <h3><%= article.title %></h3>
-              <p><%= article.summary %></p>
-              <a href="<%= article.url %>" target="_blank" rel="noreferrer">Read more</a>
-            </article>
-          <% }) %>
-        </div>
-      <% } %>
+      <p class="news-result-count" id="newsResultCount" aria-live="polite"><%= articles.length %> <%= articles.length === 1 ? 'story' : 'stories' %></p>
+
+      <div class="news-grid" id="newsGrid">
+        <% articles.forEach(article => { %>
+          <article
+            class="news-card"
+            data-title="<%= article.title %>"
+            data-summary="<%= article.summary %>"
+            data-source="<%= article.source %>"
+          >
+            <div class="news-tag"><%= article.source %></div>
+            <h3><%= article.title %></h3>
+            <p><%= article.summary %></p>
+            <a href="<%= article.url %>" target="_blank" rel="noreferrer noopener">Read more</a>
+          </article>
+        <% }) %>
+      </div>
+
+      <div class="empty-state" id="newsEmptyState" <%= articles.length === 0 && query ? '' : 'hidden' %>>
+        No ABS-CBN news found for &ldquo;<span id="newsEmptyQuery"><%= query %></span>&rdquo;.
+      </div>
     </main>
 
     <footer class="footer">
       <p><span>© 2026 Bayan News</span> • All rights reserved to ABS-CBN and Bayan News 2026.</p>
     </footer>
+
+    <script src="./newsfeed.js?v=1"></script>
   </body>
 </html>

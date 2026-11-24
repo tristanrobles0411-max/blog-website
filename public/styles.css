@@ -403,6 +403,12 @@ textarea {
   max-width: 520px;
 }
 
+.news-result-count {
+  margin: 0 0 12px;
+  color: #14213D;
+  font-size: 0.95rem;
+}
+
 @media (max-width: 700px) {
   .topbar,
   .page-header {

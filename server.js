@@ -85,10 +85,97 @@ function stripHtml(value = '') {
 
 let newsCache = { articles: null, fetchedAt: 0 };
 
+const GOOGLE_NEWS_RSS =
+  'https://news.google.com/rss/search?q=site:abs-cbn.com&hl=en-PH&gl=PH&ceid=PH:en';
+const NEWS_LIMIT = 24;
+const MONTHS = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];
+
+function decodeXml(value = '') {
+  return value
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#0?39;|&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&amp;/g, '&');
+}
+
+function extractTag(xml, tag) {
+  const match = new RegExp(`<${tag}(?:\\s[^>]*)?>([\\s\\S]*?)</${tag}>`, 'i').exec(xml);
+  return match ? match[1] : '';
+}
+
+function formatNewsDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return `${MONTHS[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
+}
+
+async function fetchGoogleNewsRss() {
+  const response = await fetch(GOOGLE_NEWS_RSS, {
+    signal: AbortSignal.timeout(15000),
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; BayanNews/1.0)',
+      Accept: 'application/rss+xml, application/xml, text/xml'
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Google News RSS responded with ${response.status}`);
+  }
+
+  const xml = await response.text();
+  const articles = [];
+  const seen = new Set();
+  const itemPattern = /<item>([\s\S]*?)<\/item>/gi;
+  let itemMatch;
+
+  while ((itemMatch = itemPattern.exec(xml)) !== null && articles.length < NEWS_LIMIT) {
+    const item = itemMatch[1];
+    const url = decodeXml(extractTag(item, 'link')).trim();
+    const source = stripHtml(decodeXml(extractTag(item, 'source'))) || 'ABS-CBN News';
+    let title = stripHtml(decodeXml(extractTag(item, 'title')));
+    const published = formatNewsDate(extractTag(item, 'pubDate'));
+
+    if (!title || !url || seen.has(url)) continue;
+
+    const suffix = ` - ${source}`;
+    if (title.endsWith(suffix)) title = title.slice(0, -suffix.length).trim();
+    if (!title) continue;
+
+    seen.add(url);
+    articles.push({
+      title,
+      summary: published
+        ? `Latest ABS-CBN News report, published ${published}.`
+        : 'Latest news and updates from ABS-CBN News.',
+      source,
+      url
+    });
+  }
+
+  return articles;
+}
+
 async function fetchAbsCbnNews() {
   const CACHE_DURATION_MS = 5 * 60 * 1000;
   if (newsCache.articles && Date.now() - newsCache.fetchedAt < CACHE_DURATION_MS) {
     return newsCache.articles;
+  }
+
+  try {
+    const rssArticles = await fetchGoogleNewsRss();
+    if (rssArticles.length > 0) {
+      newsCache = { articles: rssArticles, fetchedAt: Date.now() };
+      return rssArticles;
+    }
+  } catch (error) {
+    console.log('Google News RSS fetch failed:', error.message);
   }
 
   const sources = [
@@ -325,7 +412,8 @@ app.post('/posts/:postId/comments/:commentId/delete', (req, res) => {
 
 app.get('/newsfeed', async (req, res) => {
   const allArticles = await fetchAbsCbnNews();
-  const query = (req.query.q || '').trim().toLowerCase();
+  const rawQuery = String(req.query.q || '').trim();
+  const query = rawQuery.toLowerCase();
   const articles = query
     ? allArticles.filter((article) =>
         `${article.title} ${article.summary} ${article.source}`.toLowerCase().includes(query)
@@ -335,7 +423,7 @@ app.get('/newsfeed', async (req, res) => {
   res.render('newsfeed', {
     pageTitle: 'News Feed',
     articles,
-    query,
+    query: rawQuery,
     isStaticDeploy: false
   });
 });
