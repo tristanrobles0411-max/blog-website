@@ -16,12 +16,6 @@
           <a href="./post">Post</a>
           <a href="./newsfeed">News Feed</a>
         </nav>
-
-        <form class="search-form" id="searchForm">
-          <input id="searchInput" type="text" placeholder="Search posts..." aria-label="Search posts" />
-          <button class="secondary-btn" type="submit">Search</button>
-          <button class="delete-btn" type="button" id="clearSearchBtn">Clear</button>
-        </form>
       </div>
     </header>
 
@@ -118,8 +112,6 @@
           <% }) %>
         <% } %>
       </div>
-
-      <div id="noPostsFound" class="empty-state" style="display: none;">No posts found.</div>
     </main>
 
     <footer class="footer">
@@ -129,43 +121,6 @@
     <script src="./bootstrap.bundle.min.js"></script>
     <% if (!isStaticDeploy) { %>
     <script>
-      const searchInput = document.getElementById('searchInput');
-      const searchForm = document.getElementById('searchForm');
-      const clearSearchBtn = document.getElementById('clearSearchBtn');
-      const postCards = Array.from(document.querySelectorAll('.post-card'));
-      const noPostsFound = document.getElementById('noPostsFound');
-
-      function applySearch() {
-        const query = searchInput.value.trim().toLowerCase();
-
-        let visibleCount = 0;
-
-        postCards.forEach((card) => {
-          const title = (card.dataset.title || '').toLowerCase();
-          const author = (card.dataset.author || '').toLowerCase();
-          const content = (card.dataset.content || '').toLowerCase();
-
-          const matches = !query || title.includes(query) || author.includes(query) || content.includes(query);
-          card.style.display = matches ? 'block' : 'none';
-
-          if (matches) visibleCount += 1;
-        });
-
-        noPostsFound.style.display = visibleCount === 0 ? 'block' : 'none';
-      }
-
-      searchInput.addEventListener('input', applySearch);
-
-      searchForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        applySearch();
-      });
-
-      clearSearchBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        applySearch();
-      });
-
       document.querySelectorAll('.like-form').forEach((form) => {
         form.addEventListener('submit', async (event) => {
           event.preventDefault();
@@ -198,7 +153,7 @@
     <% } %>
     <% if (isStaticDeploy) { %>
       <script id="seed-posts" type="application/json"><%- JSON.stringify(posts).replace(/</g, '\\u003c') %></script>
-      <script src="./static-app.js?v=3"></script>
+      <script src="./static-app.js?v=4"></script>
     <% } %>
   </body>
 </html>

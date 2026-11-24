@@ -135,10 +135,6 @@
     var grid = document.getElementById('postGrid');
     if (!grid) return;
 
-    var searchInput = document.getElementById('searchInput');
-    var searchForm = document.getElementById('searchForm');
-    var clearSearchBtn = document.getElementById('clearSearchBtn');
-    var noPostsFound = document.getElementById('noPostsFound');
     var state = { posts: loadPosts() };
     savePosts(state.posts);
 
@@ -153,26 +149,6 @@
         var target = new URL(link.href, window.location.href).searchParams.get('category') || 'All';
         link.classList.toggle('active', target === selected);
       });
-    }
-
-    function applySearch() {
-      var query = searchInput ? searchInput.value.trim().toLowerCase() : '';
-      var cards = grid.querySelectorAll('.post-card');
-      var visibleCount = 0;
-
-      cards.forEach(function (card) {
-        var matches = !query ||
-          (card.dataset.title || '').toLowerCase().indexOf(query) !== -1 ||
-          (card.dataset.author || '').toLowerCase().indexOf(query) !== -1 ||
-          (card.dataset.content || '').toLowerCase().indexOf(query) !== -1;
-
-        card.style.display = matches ? 'block' : 'none';
-        if (matches) visibleCount += 1;
-      });
-
-      if (noPostsFound) {
-        noPostsFound.style.display = cards.length > 0 && visibleCount === 0 ? 'block' : 'none';
-      }
     }
 
     function render() {
@@ -191,7 +167,6 @@
         : '<div class="empty-state">No posts yet. Be the first person to share something.</div>';
 
       markActiveCategory();
-      applySearch();
     }
 
     function update(mutate) {
@@ -306,20 +281,6 @@
         });
       }
     });
-
-    if (searchInput) searchInput.addEventListener('input', applySearch);
-    if (searchForm) {
-      searchForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        applySearch();
-      });
-    }
-    if (clearSearchBtn) {
-      clearSearchBtn.addEventListener('click', function () {
-        searchInput.value = '';
-        applySearch();
-      });
-    }
 
     render();
   }
