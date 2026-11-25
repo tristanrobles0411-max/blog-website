@@ -22,33 +22,14 @@
     <main class="container">
       <div class="page-header">
         <h2>News Feed</h2>
-        <a href="./"><button class="secondary-btn" type="button">Back to Home</button></a>
+        <a href="./">
+          <button class="secondary-btn" type="button">Back to Home</button>
+        </a>
       </div>
-
-      <form class="news-search-form" id="newsSearchForm" action="./newsfeed" method="GET" role="search">
-        <input
-          id="newsSearchInput"
-          type="search"
-          name="q"
-          value="<%= query %>"
-          placeholder="Search ABS-CBN news..."
-          aria-label="Search ABS-CBN news"
-          autocomplete="off"
-        />
-        <button class="secondary-btn" type="submit">Search News</button>
-        <a href="./newsfeed" id="clearNewsSearch" class="delete-btn" style="text-decoration: none;<%= query ? '' : ' display: none;' %>">Clear</a>
-      </form>
-
-      <p class="news-result-count" id="newsResultCount" aria-live="polite"><%= articles.length %> <%= articles.length === 1 ? 'story' : 'stories' %></p>
 
       <div class="news-grid" id="newsGrid">
         <% articles.forEach(article => { %>
-          <article
-            class="news-card"
-            data-title="<%= article.title %>"
-            data-summary="<%= article.summary %>"
-            data-source="<%= article.source %>"
-          >
+          <article class="news-card">
             <div class="news-tag"><%= article.source %></div>
             <h3><%= article.title %></h3>
             <p><%= article.summary %></p>
@@ -56,14 +37,10 @@
           </article>
         <% }) %>
       </div>
-
-      <div class="empty-state" id="newsEmptyState" <%= articles.length === 0 && query ? '' : 'hidden' %>>
-        No ABS-CBN news found for &ldquo;<span id="newsEmptyQuery"><%= query %></span>&rdquo;.
-      </div>
     </main>
 
     <footer class="footer">
-      <p><span>© 2026 Bayan News</span> • All rights reserved to ABS-CBN and Bayan News 2026.</p>
+      <p><span>© 2026 Bayan News</span> • News content belongs to its respective publishers.</p>
     </footer>
 
     <script src="./newsfeed.js?v=1"></script>
